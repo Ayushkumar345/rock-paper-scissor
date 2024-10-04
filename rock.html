@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors Game</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #141E30; /* Fallback for older browsers */
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            overflow: hidden;
+            color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 20px #FF00FF, 0 0 30px #FF00FF, 0 0 40px #FF00FF; }
+            100% { text-shadow: 0 0 30px #FFAAFF, 0 0 40px #FFAAFF, 0 0 50px #FFAAFF; }
+        }
+
+        #game-container {
+            text-align: center;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .choice-btn {
+            border: none;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            background: #1e3c72;
+            background: linear-gradient(145deg, #1e3c72, #2a5298);
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #000;
+            transition: transform 0.4s, box-shadow 0.4s, background 0.4s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .choice-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 25px #fff, 0 0 50px #ff00ff, 0 0 75px #ff00ff;
+        }
+
+        .choice-btn::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, rgba(255,0,255,0.6), rgba(0,255,255,0.6));
+            background-size: 200% 200%;
+            animation: glowAnimation 1.5s infinite ease-in-out;
+            z-index: -1;
+        }
+
+        @keyframes glowAnimation {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 28px;
+            padding: 15px 30px;
+            border: 2px solid #FF00FF;
+            border-radius: 15px;
+            animation: fadeIn 1s ease-in-out forwards;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        #controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #controls button {
+            background: linear-gradient(145deg, #ff005c, #ff7f7f);
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #controls button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px #ff00ff, 0 10px 30px #ff00ff;
+        }
+
+        .glow {
+            text-shadow: 0 0 15px #ff00ff, 0 0 25px #ff00ff, 0 0 35px #ff00ff, 0 0 45px #ff00ff;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1 class="glow">Rock Paper Scissors</h1>
+        <div class="choices">
+            <button class="choice-btn" id="rockBtn">Rock</button>
+            <button class="choice-btn" id="paperBtn">Paper</button>
+            <button class="choice-btn" id="scissorsBtn">Scissors</button>
+        </div>
+        <p id="result">Choose Rock, Paper, or Scissors!</p>
+        <div id="controls">
+            <button onclick="toggleMusic()">Play/Pause Music</button>
+        </div>
+    </div>
+
+    <!-- BGM Audio -->
+    <audio id="bgm" src="bgm.mp3.mp3" loop></audio>
+
+    <script>
+        // Function to get computer's choice
+        function getComputerChoice() {
+            const choices = ['rock', 'paper', 'scissors'];
+            const randomIndex = Math.floor(Math.random() * choices.length);
+            return choices[randomIndex];
+        }
+
+        // Function to determine the winner
+        function playRound(playerSelection, computerSelection) {
+            if (playerSelection === computerSelection) {
+                return `It's a tie! Computer also chose ${computerSelection}.`;
+            } else if (
+                (playerSelection === 'rock' && computerSelection === 'scissors') ||
+                (playerSelection === 'paper' && computerSelection === 'rock') ||
+                (playerSelection === 'scissors' && computerSelection === 'paper')
+            ) {
+                return `You win! Computer chose ${computerSelection}.`;
+            } else {
+                return `You lose! Computer chose ${computerSelection}.`;
+            }
+        }
+
+        // Adding event listeners for buttons
+        document.getElementById('rockBtn').addEventListener('click', function() {
+            const computerChoice = getComputerChoice();
+            const result = playRound('rock', computerChoice);
+            document.getElementById('result').textContent = result;
+        });
+
+        document.getElementById('paperBtn').addEventListener('click', function() {
+            const computerChoice = getComputerChoice();
+            const result = playRound('paper', computerChoice);
+            document.getElementById('result').textContent = result;
+        });
+
+        document.getElementById('scissorsBtn').addEventListener('click', function() {
+            const computerChoice = getComputerChoice();
+            const result = playRound('scissors', computerChoice);
+            document.getElementById('result').textContent = result;
+        });
+
+        // Control for background music
+        const bgm = document.getElementById('bgm');
+        bgm.volume = 0.2; // Setting the volume to 20%
+
+        function toggleMusic() {
+            if (bgm.paused) {
+                bgm.play();
+            } else {
+                bgm.pause();
+            }
+        }
+    </script>
+</body>
+</html>
